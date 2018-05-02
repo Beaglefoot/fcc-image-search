@@ -1,0 +1,18 @@
+{
+  "name": "fcc-image-search",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "devDependencies": {
+    "prettier": "^1.12.0"
+  },
+  "dependencies": {
+    "ejs": "^2.5.9",
+    "express": "^4.16.3",
+    "lodash": "^4.17.5",
+    "mongoose": "^5.0.16"
+  }
+}
