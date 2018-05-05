@@ -35,18 +35,17 @@ app.get('/', (_, res) => {
 
 app.get('/search/:query', (req, res) => {
   const { query } = req.params;
-  console.log('query', query);
-  console.log('apiUrl', apiUrl);
 
   axios
     .get(`${apiUrl}/${sort}?q=${query}`, {
       headers: { Authorization: `Client-ID ${clientId}` }
     })
     .then(normalize)
-    .then(console.log)
-    .catch(error => console.error(error));
-
-  res.send();
+    .then(data => res.send(data))
+    .catch(error => {
+      console.error(error);
+      res.sendStatus(500);
+    });
 });
 
 app.listen(PORT, () =>
