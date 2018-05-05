@@ -3,11 +3,15 @@
 const fs = require('fs');
 const express = require('express');
 const mongoose = require('mongoose');
+const axios = require('axios');
 const getCurrentIp = require('./helpers/getCurrentIp');
 const getCurrentTime = require('./helpers/getCurrentTime');
 const logger = require('./middlewares/logger');
+const normalize = require('./helpers/normalize');
 
-const {} = JSON.parse(fs.readFileSync('./.env', 'utf8'));
+const {
+  imgur: { clientId, apiUrl, sort }
+} = JSON.parse(fs.readFileSync('./.env', 'utf8'));
 
 mongoose.Promise = global.Promise;
 // mongoose.connect();
@@ -27,6 +31,22 @@ app.get('/', (_, res) => {
   res.render('index', {}, (err, html) => {
     res.send(html);
   });
+});
+
+app.get('/search/:query', (req, res) => {
+  const { query } = req.params;
+  console.log('query', query);
+  console.log('apiUrl', apiUrl);
+
+  axios
+    .get(`${apiUrl}/${sort}?q=${query}`, {
+      headers: { Authorization: `Client-ID ${clientId}` }
+    })
+    .then(normalize)
+    .then(console.log)
+    .catch(error => console.error(error));
+
+  res.send();
 });
 
 app.listen(PORT, () =>
