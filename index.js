@@ -8,13 +8,17 @@ const getCurrentIp = require('./helpers/getCurrentIp');
 const getCurrentTime = require('./helpers/getCurrentTime');
 const logger = require('./middlewares/logger');
 const normalize = require('./helpers/normalize');
+const Search = require('./models/Search');
 
 const {
+  mongoUri,
   imgur: { clientId, apiUrl, sort }
 } = JSON.parse(fs.readFileSync('./.env', 'utf8'));
 
 mongoose.Promise = global.Promise;
-// mongoose.connect();
+mongoose
+  .connect(mongoUri)
+  .catch(err => console.error('Failed to connect to DB:', err));
 
 const PORT = process.argv[2] || 3000;
 const currentIp = getCurrentIp();
@@ -36,6 +40,13 @@ app.get('/', (_, res) => {
 app.get('/search/:query', (req, res) => {
   const { query } = req.params;
   const { offset } = req.query;
+
+  const search = new Search({ query, timestamp: Date.now() });
+
+  search
+    .save()
+    .then(search => console.log(`${search} was saved to DB`))
+    .catch(err => console.error('Failed to save record into DB', err));
 
   axios
     .get(`${apiUrl}/${sort}/${offset}?q=${query}`, {
