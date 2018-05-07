@@ -60,6 +60,20 @@ app.get('/search/:query', (req, res) => {
     });
 });
 
+app.get('/recent(/:amount)?', (req, res) => {
+  const amount = parseInt(req.params.amount) || 10;
+  const cleanUp = ({ query, timestamp }) => ({ query, timestamp });
+
+  Search.find()
+    .sort('-timestamp')
+    .limit(amount)
+    .then(result => res.send(result.map(cleanUp)))
+    .catch(err => {
+      console.error('Failed to get data from DB', err);
+      res.sendStatus(500);
+    });
+});
+
 app.listen(PORT, () =>
   console.log(
     `[${currentTime}] express is running at http://${currentIp}:${PORT}`
