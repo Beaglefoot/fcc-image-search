@@ -35,9 +35,10 @@ app.get('/', (_, res) => {
 
 app.get('/search/:query', (req, res) => {
   const { query } = req.params;
+  const { offset } = req.query;
 
   axios
-    .get(`${apiUrl}/${sort}?q=${query}`, {
+    .get(`${apiUrl}/${sort}/${offset}?q=${query}`, {
       headers: { Authorization: `Client-ID ${clientId}` }
     })
     .then(normalize)
