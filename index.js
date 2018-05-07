@@ -10,14 +10,13 @@ const logger = require('./middlewares/logger');
 const normalize = require('./helpers/normalize');
 const Search = require('./models/Search');
 
-const {
-  mongoUri,
-  imgur: { clientId, apiUrl, sort }
-} = JSON.parse(fs.readFileSync('./.env', 'utf8'));
+const { MONGO_URI, CLIENT_ID, API_URL, SORT } = process.env.NODE_ENV
+  ? process.env
+  : JSON.parse(fs.readFileSync('./.env', 'utf8'));
 
 mongoose.Promise = global.Promise;
 mongoose
-  .connect(mongoUri)
+  .connect(MONGO_URI)
   .catch(err => console.error('Failed to connect to DB:', err));
 
 const PORT = process.argv[2] || 3000;
@@ -49,8 +48,8 @@ app.get('/search/:query', (req, res) => {
     .catch(err => console.error('Failed to save record into DB', err));
 
   axios
-    .get(`${apiUrl}/${sort}/${offset}?q=${query}`, {
-      headers: { Authorization: `Client-ID ${clientId}` }
+    .get(`${API_URL}/${SORT}/${offset}?q=${query}`, {
+      headers: { Authorization: `Client-ID ${CLIENT_ID}` }
     })
     .then(normalize)
     .then(data => res.send(data))
