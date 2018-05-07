@@ -14,19 +14,49 @@
       <h3>The user stories are:</h3>
       <ul>
         <li>I can get the image URLs, alt text and page urls for a set of images relating to a given search string.</li>
-        <li>I can paginate through the responses by adding a ?offset=2 parameter to the URL.</li>
+        <li>I can paginate through the responses by adding a <code>?offset=2</code> parameter to the URL.</li>
         <li>I can get a list of the most recently submitted search strings.</li>
       </ul>
 
       <h3>Examples of usage:</h3>
 
+      <h4>Images search:</h4>
+
       <div class="example">
         <div class="input"><b>Input</b></div>
+      </div>
+      <div class="example">
+        <div class="input"><code>curl -X GET '<%= url %>/search/cats'</code></div>
+      </div>
+      <div class="example">
         <div class="output"><b>Output</b></div>
       </div>
       <div class="example">
-        <div class="input">http://localhost:3000/</div>
-        <div class="output">{}</div>
+        <div class="output"><code>[{"text":"Imgur needs more pics of fat cats","page":"https://imgur.com/a/uVfzAL9","image":"https://i.imgur.com/c9TkcsQ.jpg"},...]</code></div>
+      </div>
+
+      <br>
+      <div class="input">You can provide an additional query parameter for pagination: <code>?offset=</code></div>
+
+      <h4>Recent searches:</h4>
+
+      <div class="example">
+        <div class="input"><b>Input</b></div>
+      </div>
+      <div class="example">
+        <div class="input"><code>curl -X GET '<%= url %>/recent'</code></div>
+      </div>
+      <div class="example">
+        <div class="output"><b>Output</b></div>
+      </div>
+      <div class="example">
+        <div class="output"><code>[{"query":"cats","timestamp":1525717078149},{"query":"dogs","timestamp":1525687334818},...]</code></div>
+      </div>
+      
+      <br>
+      <div class="input">You can also choose the amount of recent queries with optional parameter:</div> 
+      <div class="example">
+        <div class="input"><code>curl -X GET '<%= url %>/recent/42'</code></div>
       </div>
       
     </div>

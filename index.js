@@ -10,7 +10,8 @@ const logger = require('./middlewares/logger');
 const normalize = require('./helpers/normalize');
 const Search = require('./models/Search');
 
-const { MONGO_URI, CLIENT_ID, API_URL, SORT } = process.env.NODE_ENV
+const { MONGO_URI, CLIENT_ID, API_URL, SORT, BOX_URL, NODE_ENV } = process.env
+  .NODE_ENV
   ? process.env
   : JSON.parse(fs.readFileSync('./.env', 'utf8'));
 
@@ -22,6 +23,7 @@ mongoose
 const PORT = process.argv[2] || 3000;
 const currentIp = getCurrentIp();
 const currentTime = getCurrentTime();
+const boxPlusPort = NODE_ENV === 'production' ? BOX_URL : `${BOX_URL}:${PORT}`;
 
 const app = express();
 
@@ -31,7 +33,7 @@ app.use(express.static('public'));
 app.use(express.json());
 
 app.get('/', (_, res) => {
-  res.render('index', {}, (err, html) => {
+  res.render('index', { url: boxPlusPort }, (err, html) => {
     res.send(html);
   });
 });
